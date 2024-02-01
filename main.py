@@ -4,6 +4,7 @@ import numpy
 from PIL import Image, ImageChops, ImageSequence
 import requests
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,31 +32,31 @@ def convert_gif_anime_alpha_to_black(
     """
     try:
         img = Image.open(filepath)
+
+        converted_image_list = []
+
+        index = 1
+        for frame in ImageSequence.Iterator(img):
+            rgba = frame.split()
+            if len(rgba) == 4:
+                rgb = frame.convert("RGB")
+                # alpha channel を mask に
+                mask = rgba[3].convert(mode="RGB")
+
+                converted_image = ImageChops.darker(rgb, mask)
+                converted_image_list.append(converted_image)
+
+                index += 1
+
+        converted_image_list[0].save(
+            savepath,
+            save_all=True,
+            append_images=converted_image_list[1:],
+            loop=0,
+        )
     except Exception as e:
         logger.error(e)
-        logger.error(f"ファイル{filepath}の読み込みに失敗しました")
-
-    converted_image_list = []
-
-    index = 1
-    for frame in ImageSequence.Iterator(img):
-        rgba = frame.split()
-        if len(rgba) == 4:
-            rgb = frame.convert("RGB")
-            # alpha channel を mask に
-            mask = rgba[3].convert(mode="RGB")
-
-            converted_image = ImageChops.darker(rgb, mask)
-            converted_image_list.append(converted_image)
-
-            index += 1
-
-    converted_image_list[0].save(
-        savepath,
-        save_all=True,
-        append_images=converted_image_list[1:],
-        loop=0,
-    )
+        logger.error("変換に失敗しました")
 
 
 def main() -> None:
