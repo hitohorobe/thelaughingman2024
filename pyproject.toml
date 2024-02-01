@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "thelaughingman2024"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+opencv-python = "^4.9.0.80"
+numpy = "^1.26.3"
+requests = "^2.31.0"
+pillow = "^10.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
